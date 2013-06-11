@@ -50,7 +50,7 @@ def calcs(data):
 def list_stat(data):
     key = data[0]
     vals = data[1]
-    size = size(vals)
+    size = len(vals)
     dot_product = sum(map(lambda f: f[0], vals))
     rating_sum = sum(map(lambda f: f[1], vals))
     rating2_sum = sum(map(lambda f: f[2], vals))
@@ -77,7 +77,7 @@ def regularizedCorrelation(size, dot_product, rating_sum, rating2_sum,
                            priorCorrelation):
     unregularized = correlation(size, dot_product, rating_sum, rating2_sum,
                                 rating_norm_sq, rating2_norm_sq)
-    w = double(size) / (size + virtual_count)
+    w = float(size) / (size + virtual_count)
     return w * unregularized + (1-w) * priorCorrelation
 
 
@@ -87,14 +87,14 @@ def cosine_similarity(dot_product, rating_norm, rating2_norm):
 
 def jaccard_similarity(user_in_common, total_user1, total_user2):
     union = total_user1 + total_user2 - user_in_common
-    return double(user_in_common) / union
+    return float(user_in_common) / union
 
 
 def calc_similaritiy(fields):
     key = fields[0]
     args = fields[1]
-    corr = correlation(*args)
-    reg_corr = regularizedCorrelation(*args, virtual_count=PRIOR_COUNT,
+    corr = correlation(*args[:6])
+    reg_corr = regularizedCorrelation(*args[:6], virtual_count=PRIOR_COUNT,
                                       priorCorrelation=PRIOR_CORRELATION)
     cos_sim = cosine_similarity(args[
                                 1], math.sqrt(args[-4]), math.sqrt(args[-3]))
